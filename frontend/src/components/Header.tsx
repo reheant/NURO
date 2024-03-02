@@ -28,22 +28,17 @@ export function Header() {
       <Navbar position="static">
           <NavbarBrand>
             <AcmeLogo />
-            <p className="font-bold text-inherit">ACME</p>
+            <h1 className="font-bold text-inherit">NURO</h1>
           </NavbarBrand>
           <NavbarContent className="sm:flex gap-4" justify="center">
-            <NavbarItem isActive = {window.location.pathname === "/contact"}>
-              <Link color={window.location.pathname === "/contact" ? "primary" :"foreground"} href="/contact" >
-                Contact
-              </Link>
-            </NavbarItem>
             <NavbarItem isActive = {window.location.pathname === "/"}>
               <Link color={window.location.pathname === "/" ? "primary" :"foreground"} href="/" aria-current="page">
-                Home
+                Dashboard
               </Link>
             </NavbarItem>
             <NavbarItem isActive = {window.location.pathname === "/about"}>
               <Link color={window.location.pathname === "/about" ? "primary" :"foreground"} href="/about" >
-                About
+                Live Transcript
               </Link>
             </NavbarItem>
           </NavbarContent>
