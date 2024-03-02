@@ -68,7 +68,7 @@ def update_item(item_id):
 def add_patientInfo():
     db = get_database()
     print(request.json,file=sys.stderr)
-    new_item = db["PatientInformation"].insert_one({'firstName': request.json.get('firstName'), 'lastName': request.json.get("lastName"), 'sexe': request.json.get("sexe"), 'ethnicity': request.json.get("ethnicity")})
+    new_item = db["PatientInformation"].insert_one({'firstName': request.json.get('firstName'), 'lastName': request.json.get("lastName"), 'sexe': request.json.get("sexe"), 'ethnicity': request.json.get("ethnicity"), 'address': request.json.get("address")})
     created_item = db["PatientInformation"].find_one(
         {"_id": new_item.inserted_id}
     )
@@ -125,7 +125,8 @@ def get_patientInfo():
         lastname = document.get("lastName")
         sexe = document.get("sexe")
         ethnicity= document.get("ethnicity")
-        return jsonify({"firstName": firstname, "lastName": lastname, "sexe": sexe, "ethnicity":ethnicity})
+        address = document.get("address")
+        return jsonify({"firstName": firstname, "lastName": lastname, "sexe": sexe, "ethnicity":ethnicity, "address":address})
     else:
         return jsonify({"Error": "Undefined"}), 404
     
