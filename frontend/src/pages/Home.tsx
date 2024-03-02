@@ -1,6 +1,8 @@
 import React from "react";
 //import { useEffect, useState } from "react";
 import {Card, CardBody} from "@nextui-org/react";
+import Maps from "../components/Maps";
+import "../components/main";
 
 function Home() {
   // const [data, setData] = useState<any>(null);
@@ -50,7 +52,7 @@ function Home() {
         <div className="my-2 px-2 w-1/2 overflow-hidden">
           <Card>
             <CardBody>
-              {/*Content*/}
+            <div id="myChart" style={{ width: '100%', height: '400px' }}></div>
             </CardBody>
           </Card>
         </div>
@@ -59,7 +61,7 @@ function Home() {
       <div className="flex-grow my-2 px-2 overflow-hidden">
         <Card>
           <CardBody>
-            {/*Content*/}
+            <Maps/>
           </CardBody>
         </Card>
       </div>
