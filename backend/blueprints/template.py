@@ -63,3 +63,97 @@ def update_item(item_id):
         return update_result
     
     return 'Did not find item with id ' + str(item_id), 401
+
+@template_blueprint.route('/patientInformation', methods=['POST'])
+def add_patientInfo():
+    db = get_database()
+    print(request.json,file=sys.stderr)
+    new_item = db["PatientInformation"].insert_one({'firstName': request.json.get('firstName'), 'lastName': request.json.get("lastName"), 'sexe': request.json.get("sexe"), 'ethnicity': request.json.get("ethnicity"), 'address': request.json.get("address")})
+    created_item = db["PatientInformation"].find_one(
+        {"_id": new_item.inserted_id}
+    )
+    created_item['_id']= str(created_item['_id'])
+
+    return created_item, 201
+
+@template_blueprint.route('/location',methods = ["POST"])
+def add_location():
+    db = get_database()
+    print(request.json,file=sys.stderr)
+    new_item = db["Location"].insert_one({'latitude': request.json.get('latitude'), 'longitude': request.json.get("longitude")})
+    created_item = db["Location"].find_one(
+        {"_id": new_item.inserted_id}
+    )
+    created_item['_id']= str(created_item['_id'])
+
+    return created_item, 201
+
+
+@template_blueprint.route('/reminders',methods = ["POST"])
+def add_reminders():
+    db = get_database()
+    print(request.json,file=sys.stderr)
+    new_item = db["Reminders"].insert_one({'type': request.json.get('type'), 'name': request.json.get("name"), 'description': request.json.get("description"),'date': request.json.get("date"),'time': request.json.get("time")})
+    created_item = db["Reminders"].find_one(
+        {"_id": new_item.inserted_id}
+    )
+    created_item['_id']= str(created_item['_id'])
+
+    return created_item, 201
+
+
+@template_blueprint.route('/location', methods = ["GET"] )
+def get_location():
+    db = get_database()
+    collection = db['Location']
+    document = collection.find_one({})
+    if document:
+        longitude = document.get("longitude")
+        latitude = document.get("latitude")
+        return jsonify({"longitude": longitude, "latitude": latitude})
+    else:
+        return jsonify({"Error": "Undefined"}), 404
+    
+
+@template_blueprint.route('/patientInformation', methods = ["GET"] )
+def get_patientInfo():
+    db = get_database()
+    collection = db['PatientInformation']
+    document = collection.find_one({})
+    if document:
+        firstname = document.get("firstName")
+        lastname = document.get("lastName")
+        sexe = document.get("sexe")
+        ethnicity= document.get("ethnicity")
+        address = document.get("address")
+        return jsonify({"firstName": firstname, "lastName": lastname, "sexe": sexe, "ethnicity":ethnicity, "address":address})
+    else:
+        return jsonify({"Error": "Undefined"}), 404
+    
+
+@template_blueprint.route('/reminders/<int:month>/<int:day>/<int:year>', methods=["GET"])
+def get_reminder(month,day,year):
+    date = f"{month}/{day}/{year}"
+    db = get_database()
+    print(date)
+    collection = db['Reminders']
+    results = list(collection.find({"date": date}))
+
+    for reminder in results:
+        reminder['_id'] = str(reminder['_id'])
+    
+    return jsonify(results)
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
