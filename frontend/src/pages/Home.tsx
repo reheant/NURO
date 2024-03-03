@@ -11,8 +11,8 @@ import Paho from "paho-mqtt";
 
 function Home() {
 
-  const [latitude, setLatitude] = useState(45.4)
-  const [longitude, setLongitude] = useState(-75.6)
+  const [latitude, setLatitude] = useState(-75.68)
+  const [longitude, setLongitude] = useState(45.42)
 
   const [forgotNumber, setForgetNumber] = useState(0)
 
