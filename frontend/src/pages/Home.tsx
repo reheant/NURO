@@ -1,11 +1,32 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 //import { useEffect, useState } from "react";
 import { Button, Card, CardBody, CardFooter, CardHeader } from "@nextui-org/react";
 import { createMap } from "../components/Maps";
 import UserCard from "../components/UserCard";
 import BarChart from "../components/BarChart";
 import ReminderCard from "../components/ReminderCard";
+import messaging from "../Messaging";
+
 function Home() {
+
+
+  const [connected, setConnected] = useState(false)
+  function handleMessage(message:any){
+    console.log(message)
+  }
+
+  useEffect(()=>{
+    messaging.register(handleMessage);
+    if(!connected){
+      messaging.connectWithPromise().then(response => {
+				console.log("Succesfully connected to Solace Cloud.", response);
+				messaging.subscribe("exampletopic");
+				setConnected(true)
+			}).catch(error => {
+				console.log("Unable to establish connection with Solace Cloud, see above logs for more details.", error);
+			});
+    }
+  },[])
   // const [data, setData] = useState<any>(null);
   // const [error, setError] = useState<string | null>(null);
 
@@ -42,8 +63,8 @@ function Home() {
                 <Card className="h-full">
                   <CardBody>
                     <UserCard
-                      firstName="Danny"
-                      lastName="McLoan"
+                      firstName="Athavan"
+                      lastName="Thambimuthu"
                       sex="Male"
                       ethnicity="Irish"
                       address="1234 Journalist Ave, News City, NC" />
