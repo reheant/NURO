@@ -144,6 +144,28 @@ def get_reminder(month,day,year):
     
     return jsonify(results)
 
+@template_blueprint.route('/reminders', methods=["GET"])
+def get_all_reminders():
+    db = get_database()
+    reminders = list(db["Reminders"].find())  # Retrieve all reminders from the database
+
+    # Convert ObjectId to string for JSON serialization
+    for reminder in reminders:
+        reminder['_id'] = str(reminder['_id'])
+
+    return jsonify(reminders), 200
+
+@template_blueprint.route('/forgot_count', methods=["GET"])
+def get_forgot_count():
+    db = get_database()
+    forgot_count = db["ForgotCount"].find_one()  # Retrieve the only document in the ForgotCount collection
+
+    # If document found, convert ObjectId to string for JSON serialization
+    if forgot_count:
+        forgot_count['_id'] = str(forgot_count['_id'])
+        return jsonify(forgot_count), 200
+    else:
+        return jsonify({"error": "No document found"}), 404
     
     
 

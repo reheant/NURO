@@ -13,7 +13,7 @@ const UserCard: React.FC<UserCardProps> = ({ firstName, lastName, sex, ethnicity
     return (
 <div className="flex flex-col items-center w-full max-w-xs rounded-lg overflow-hidden">
     <div className="w-full flex justify-center align-center mb-4">
-        <div><Avatar isBordered className='w-20 h-20 text-md' radius="sm" src="https://i.pravatar.cc/150?u=a042581f4e29026024d" /></div>
+        <div><Avatar isBordered className='w-20 h-20 text-sm pt-5' radius="sm" src="https://i.pravatar.cc/150?u=a042581f4e29026024d" /></div>
     </div>
     <div className="w-full p-4 text-center">
         <h3 className="text-xl font-bold mb-2">{ `${firstName} ${lastName}`}</h3>

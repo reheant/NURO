@@ -31,6 +31,21 @@ function Home() {
 
   useEffect(()=>{
     messaging.register(handleMessage);
+    fetch('http://localhost:5000/api/forgot_count')
+      .then(response => {
+        // Check if response is successful
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error('Failed to fetch forgot count.');
+      })
+      .then(data => {
+        // Set the fetched document in state
+        setForgetNumber(data.forgot);
+      })
+      .catch(error => {
+        console.error('Error fetching forgot count:', error);
+      });
   },[])
   // const [data, setData] = useState<any>(null);
   // const [error, setError] = useState<string | null>(null);
@@ -93,7 +108,7 @@ function Home() {
               <div className="my-2 mx-2 flex-grow overflow-hidden">
                 <Card className="h-full">
                   <CardHeader className="w-full flex justify center items-center">
-                    Number of Forgets
+                    History
                   </CardHeader>
                   <CardBody className="w-13 h-13">
                     <BarChart dataPoints={[3, 2, 4, 3, forgotNumber]} />

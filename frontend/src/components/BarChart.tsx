@@ -28,7 +28,7 @@ const BarChart: React.FC<BarChartProps> = ({ dataPoints }) => {
     labels: dataPoints.map((_, index) => `Day ${index + 1}`),
     datasets: [
       {
-        label: 'Dataset 1',
+        label: `Day`,
         data: dataPoints,
         backgroundColor: 'rgba(45, 85, 255)',
       },
