@@ -158,14 +158,15 @@ def get_all_reminders():
 @template_blueprint.route('/forgot_count', methods=["GET"])
 def get_forgot_count():
     db = get_database()
-    forgot_count = db["ForgotCount"].find_one()  # Retrieve the only document in the ForgotCount collection
+    # Find and update the only document in the ForgotCount collection
+    updated_forgot_count = db["ForgotCount"].find_one_and_update({}, {"$inc": {"forgot": 1}}, return_document=True)
 
-    # If document found, convert ObjectId to string for JSON serialization
-    if forgot_count:
-        forgot_count['_id'] = str(forgot_count['_id'])
-        return jsonify(forgot_count), 200
+    if updated_forgot_count:
+        # If document found and updated successfully, convert ObjectId to string for JSON serialization
+        updated_forgot_count['_id'] = str(updated_forgot_count['_id'])
+        return jsonify(updated_forgot_count), 200
     else:
-        return jsonify({"error": "No document found"}), 404
+        return jsonify({"error": "No document found or failed to update"}), 404
     
     
 

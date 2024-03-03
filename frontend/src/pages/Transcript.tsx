@@ -84,7 +84,7 @@ export default function App() {
       {conversations.map((conversation: any, index: number)=>(
         <div style={{width:'100%', display:'flex', justifyContent:conversation.speakerTag === 1? 'flex-end': 'flex-start'}} ><Card style={{marginBottom:20 , width:500, alignSelf:'flex-end'}}>
               <CardBody style={conversation.speakerTag===1? cardStylePatient : cardStyleStranger}>
-                <p>Patient: First Sentence.</p> {/* Added textStyle */}
+                <p>{conversation.speakerTag===1 ? 'Patient' : 'Stranger' }: {conversation.context}</p> {/* Added textStyle */}
               </CardBody>
             </Card></div>
       ))}

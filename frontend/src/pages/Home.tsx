@@ -29,8 +29,13 @@ function Home() {
 
   }
 
+  
   useEffect(()=>{
     messaging.register(handleMessage);
+  }
+  ,[])
+
+  useEffect(()=>{
     fetch('http://localhost:5000/api/forgot_count')
       .then(response => {
         // Check if response is successful
@@ -46,7 +51,7 @@ function Home() {
       .catch(error => {
         console.error('Error fetching forgot count:', error);
       });
-  },[])
+  },[forgotNumber])
   // const [data, setData] = useState<any>(null);
   // const [error, setError] = useState<string | null>(null);
 
