@@ -3,8 +3,13 @@ import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Paginat
 import {users} from "./data";
 import { IconDotsVertical, IconPlus } from "@tabler/icons-react";
 
-export default function App() {
+export default function App(props:any) {
   const [page, setPage] = React.useState(1);
+  const [name, setname] = React.useState("");
+  const [type, settype] = React.useState("");
+  const [description, setdescription] = React.useState("");
+  const [date, setdate] = React.useState("");
+  const [time, settime] = React.useState("");
   const [selectedIndex, setSelectedIndex] = React.useState<number>(-1);
   const rowsPerPage = 4;
   
@@ -28,22 +33,23 @@ export default function App() {
           <>
             <ModalHeader className="flex flex-col gap-1">{selectedIndex !== -1 ? items[selectedIndex as number]?.name: 'Create a new Reminder'}</ModalHeader>
             <ModalBody>
-              <Input label="Name" placeholder={selectedIndex !== -1 ? items[selectedIndex as number]?.name: ''} />
-              <Input label="Type" placeholder={selectedIndex !== -1 ? items[selectedIndex as number]?.type: ''} />
-              <Input label="Date" placeholder={selectedIndex !== -1 ? items[selectedIndex as number]?.date: ''} />
-              <Input label="Time" placeholder={selectedIndex !== -1 ? items[selectedIndex as number]?.time: ''} />
+              <Input label="Name" value={name} onValueChange={setname} placeholder={selectedIndex !== -1 ? items[selectedIndex as number]?.name: ''} />
+              <Input label="Type" value={type} onValueChange={settype} placeholder={selectedIndex !== -1 ? items[selectedIndex as number]?.type: ''} />
+              <Input label="Date" value={date} onValueChange={setdate} placeholder={selectedIndex !== -1 ? items[selectedIndex as number]?.date: ''} />
+              <Input label="Time" value={time} onValueChange={settime} placeholder={selectedIndex !== -1 ? items[selectedIndex as number]?.time: ''} />
               <Textarea
                 isRequired
                 label="Description"
                 labelPlacement="outside"
+                value={description} onValueChange={setdescription}
                 placeholder={selectedIndex === -1 ? items[selectedIndex as number]?.description: ''}
               />
             </ModalBody>
             <ModalFooter>
-              <Button color="danger" variant="light" onPress={onClose}>
+              <Button color="danger" variant="light" onPress={()=>{onClose();}}>
                 Delete
               </Button>
-              <Button color="primary" onPress={onClose}>
+              <Button color="primary" onPress={()=>{props.sendReminder(name,description,date,time); onClose();}}>
                 Save
               </Button>
             </ModalFooter>

@@ -1,7 +1,7 @@
 import mapboxgl from 'mapbox-gl';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 
-export function createMap() {
+export function createMap(longitude :number , latitude:number) {
     // Access token is required to use Mapbox GL
     mapboxgl.accessToken = 'pk.eyJ1IjoiYWJpbGFzaDEiLCJhIjoiY2x0OXJzMXE5MDhrajJyb3Y3YnFwa25maiJ9.N7tI58w8MejLLvL8rJzEfA';
 
@@ -17,7 +17,7 @@ export function createMap() {
     const map = new mapboxgl.Map({
         container: 'map', // container id
         style: mapStyle, // stylesheet location
-        center: [-75.7, 45.4], // starting position [lng, lat]
+        center: [longitude, latitude], // starting position [lng, lat]
         zoom: 15 // starting zoom
     });
 
@@ -25,7 +25,7 @@ export function createMap() {
     const marker = new mapboxgl.Marker({
         color: '#3FB1CE' // Set the color of the marker to blue
     })
-    .setLngLat([-75.7, 45.4]) // Set the marker's location [longitude, latitude]
+    .setLngLat([longitude, latitude]) // Set the marker's location [longitude, latitude]
     .addTo(map);
 
     // Initialize Mapbox Draw

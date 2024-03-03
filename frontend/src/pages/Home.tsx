@@ -1,3 +1,4 @@
+//ts-nocheck
 import React, { useEffect, useState } from "react";
 //import { useEffect, useState } from "react";
 import { Button, Card, CardBody, CardFooter, CardHeader } from "@nextui-org/react";
@@ -6,26 +7,30 @@ import UserCard from "../components/UserCard";
 import BarChart from "../components/BarChart";
 import ReminderCard from "../components/ReminderCard";
 import messaging from "../Messaging";
+import Paho from "paho-mqtt";
 
 function Home() {
 
+  const [latitude, setLatitude] = useState(45.4)
+  const [longitude, setLongitude] = useState(-75.6)
 
-  const [connected, setConnected] = useState(false)
+  const [forgotNumber, setForgetNumber] = useState(0)
+
+
   function handleMessage(message:any){
-    console.log(message)
+    if(message.destinationName === '/location'){
+      const location =JSON.parse(message.payloadString)
+      setLatitude(location.latitude)
+      setLongitude(location.longitude)
+    }
+    if(message.destinationName === '/forgot'){
+      setForgetNumber((prev)=> prev+1);
+    }
+
   }
 
   useEffect(()=>{
     messaging.register(handleMessage);
-    if(!connected){
-      messaging.connectWithPromise().then(response => {
-				console.log("Succesfully connected to Solace Cloud.", response);
-				messaging.subscribe("exampletopic");
-				setConnected(true)
-			}).catch(error => {
-				console.log("Unable to establish connection with Solace Cloud, see above logs for more details.", error);
-			});
-    }
   },[])
   // const [data, setData] = useState<any>(null);
   // const [error, setError] = useState<string | null>(null);
@@ -50,8 +55,21 @@ function Home() {
   // }, []);
 
   useEffect(() => {
-    createMap()
-  }, [])
+    createMap(latitude,longitude)
+  }, [latitude,longitude])
+
+  function sendLostMessage(){
+    let messageObj = new Paho.Message("Hey this is NURO Assistant. Your caregiver has informed me that you are lost. Please enter the nearest hospital and be safe. Call 911 if it is an emergency.");
+    messageObj.destinationName = "/AIresponse/lost";
+    messaging.send(messageObj);
+  }
+
+  function sendNewReminderMessage(name:string, description:string, date:string , time:string){
+    let messageObj = new Paho.Message(`Hey this is NURO Assistant. Your caregiver has just added a reminder called ${name} . ${description} on ${date} at ${time}`);
+    messageObj.destinationName = "/AIresponse/reminder";
+    messaging.send(messageObj);
+  }
+
 
   return (
     <><div className="w-full flex justify-center items-center h-full m-auto">
@@ -78,13 +96,13 @@ function Home() {
                     Number of Forgets
                   </CardHeader>
                   <CardBody className="w-13 h-13">
-                    <BarChart dataPoints={[3, 2, 4, 3, 4]} />
+                    <BarChart dataPoints={[3, 2, 4, 3, forgotNumber]} />
                   </CardBody>
                 </Card>
               </div>
             </div>
             <div className="max-h-full py-4 ml-2 w-1/2 overflow-hidden">
-                  <ReminderCard />
+                  <ReminderCard sendReminder={sendNewReminderMessage}/>
             </div>
           </div>
 
@@ -94,8 +112,8 @@ function Home() {
                 <div id="map" style={{ width: 500, height: 612 }} />
               </CardBody>
               <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large mt-600 left-180 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                <p className="text-tiny text-white/80">Available soon.</p>
-                <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+                <p className="text-tiny text-white/80"> LOST ?</p>
+                <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm" onClick={()=>{sendLostMessage()}}>
                   Notify me
                 </Button>
               </CardFooter>

@@ -32,10 +32,19 @@ class Messaging extends Paho.Client {
 	
 	// called when a message arrives
 	handleMessage(message) {
-		console.log("Received message", message.payloadString);
+		console.log("Received message", message);
 		this.callbacks.forEach(callback => callback(message));
 	}
 }
 
 const messaging = new Messaging();
+messaging.connectWithPromise().then(response => {
+    console.log("Succesfully connected to Solace Cloud.", response);
+    messaging.subscribe("/location");
+    messaging.subscribe("/forgot");
+    messaging.subscribe("/conversation")
+}).catch(error => {
+    console.log("Unable to establish connection with Solace Cloud, see above logs for more details.", error);
+});
+
 export default messaging;
