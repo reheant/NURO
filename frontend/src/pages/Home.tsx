@@ -84,24 +84,14 @@ function Home() {
               </div>
             </div>
             <div className="max-h-full py-4 ml-2 w-1/2 overflow-hidden">
-              <Card>
-                <CardHeader>
-                  Reminders
-                </CardHeader>
-                <CardBody>
                   <ReminderCard />
-                  <ReminderCard />
-                  <ReminderCard />
-                  <ReminderCard />
-                </CardBody>
-              </Card>
             </div>
           </div>
 
           <div className="my-2 px-2 overflow-hidden">
             <Card isFooterBlurred>
               <CardBody>
-                <div id="map" style={{ width: 500, height: 500 }} />
+                <div id="map" style={{ width: 500, height: 612 }} />
               </CardBody>
               <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large mt-600 left-180 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
                 <p className="text-tiny text-white/80">Available soon.</p>
