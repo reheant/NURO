@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router,Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
-import About from './pages/About';
+import About from './pages/Transcript';
 import Contact from './pages/Contact';
 import {NextUIProvider} from "@nextui-org/react";
 import {ThemeProvider as NextThemesProvider} from "next-themes";
