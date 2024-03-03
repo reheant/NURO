@@ -1,8 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {Card, CardBody} from "@nextui-org/react";
 import {Input} from "@nextui-org/react";
+import messaging from "../Messaging";
+import Paho from "paho-mqtt";
 
 export default function App() {
+
+  const [conversations, setConversations] = useState<any>([]);
+  const [caregiver, setCaregiver] = useState("")
+
+  function handleMessage(message:any){
+    if(message.destinationName === '/conversation'){
+      const conversation =JSON.parse(message.payloadString)
+      setConversations([ // with a new array
+        ...conversations, // that contains all the old items
+        {speakerTag:conversation.speakerTag,context:conversation.context}// and one new item at the end
+      ])
+      
+    }
+
+  }
+
+  function sendMessage(){
+    let messageObj = new Paho.Message(`Hey this is NURO Assistant. Your caregiver wants to say ${caregiver}`);
+    messageObj.destinationName = "/AIresponse/caregiver";
+    messaging.send(messageObj);
+  }
+
+  const handleKeyDown = (event:any) => {
+    if (event.key === 'Enter') {
+      // Call a function to send the request, e.g., handleAddReminder
+      sendMessage();
+    }
+  }
+
+  useEffect(()=>{
+    messaging.register(handleMessage);
+  })
 
   const placements = [
     "outside-left",
@@ -29,6 +63,7 @@ export default function App() {
     marginBottom: `${marginBottomValue}px`
   });
 
+
   const getContainerStylePatient = (marginBottomValue: any) => ({
     display: "flex",
     justifyContent: "flex-end",
@@ -42,43 +77,18 @@ export default function App() {
     display: "flex",
     justifyContent: "center",
     alignItems: "flex-end",
-    position: "fixed" as "fixed",
-    bottom: "20px",
-    left: "0",
-    right: "0",
   };
 
   return (
-    <><>
-      <div style={getContainerStylePatient(20)}>
-        <Card>
-          <CardBody style={cardStylePatient}>
-            <p>Patient: First Sentence.</p> {/* Added textStyle */}
-          </CardBody>
-        </Card>
-      </div>
-      <div style={getContainerStyleStranger(40)}>
-        <Card>
-          <CardBody style={cardStyleStranger}>
-            <p>Stranger: Second Sentence.</p> {/* Added textStyle */}
-          </CardBody>
-        </Card>
-      </div>
-      <div style={getContainerStylePatient(70)}>
-        <Card>
-          <CardBody style={cardStylePatient}>
-            <p>Patient: Third Sentence.</p> {/* Added textStyle */}
-          </CardBody>
-        </Card>
-      </div>
-      <div style={getContainerStyleStranger(100)}>
-        <Card>
-          <CardBody style={cardStyleStranger}>
-            <p>Stranger: Fourth Sentence.</p> {/* Added textStyle */}
-          </CardBody>
-        </Card>
-      </div>
-    </>
+    <div style={{display:'flex', flexDirection:'column', width:'100%', height:'100%', justifyContent:'center', alignItems:'center'}}><div style={{maxWidth:1024, width:'100%', height:500, display:'flex', flexDirection:'column', overflowY:'auto'}}>
+      {conversations.map((conversation: any, index: number)=>(
+        <div style={{width:'100%', display:'flex', justifyContent:conversation.speakerTag === 1? 'flex-end': 'flex-start'}} ><Card style={{marginBottom:20 , width:500, alignSelf:'flex-end'}}>
+              <CardBody style={conversation.speakerTag===1? cardStylePatient : cardStyleStranger}>
+                <p>Patient: First Sentence.</p> {/* Added textStyle */}
+              </CardBody>
+            </Card></div>
+      ))}
+    </div>
     <div style={inputContainerStyle}>
     <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
@@ -87,15 +97,18 @@ export default function App() {
               <Input
                 key={placement}
                 type="answer"
+                value={caregiver}
+                onValueChange={setCaregiver}
                 label="Caregiver:"
                 labelPlacement={placement as any}
                 placeholder="Enter your message"
+                onKeyDown={handleKeyDown}
                 />
             ))}
           </div>
         </div>
       </div>
       </div>
-      </>  
+      </div>  
   );
 }
